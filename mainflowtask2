@@ -1,0 +1,56 @@
+CREATE TABLE Courses (
+    course_id INT AUTO_INCREMENT PRIMARY KEY,
+    course_name VARCHAR(100) NOT NULL,
+    course_description TEXT
+);
+
+ 
+CREATE TABLE Enrolments (
+    enrolment_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT,
+    course_id INT,
+    enrolment_date DATE,
+    FOREIGN KEY (student_id) REFERENCES Students(StudentID),
+    FOREIGN KEY (course_id) REFERENCES Courses(course_id)
+);
+ 
+INSERT INTO Courses (course_name, course_description) VALUES
+('Database Management', 'Learn SQL and database design'),
+('Web Development', 'HTML, CSS, JavaScript, and backend technologies'),
+('Machine Learning', 'Introduction to AI and ML concepts'),
+('Data Structures', 'Learn algorithms and data structures'),
+('Networking', 'Understand computer networks and security');
+ 
+INSERT INTO Enrolments (student_id, course_id, enrolment_date) VALUES
+(1, 1, '2025-03-01'),
+(1, 2, '2025-03-02'),
+(2, 3, '2025-03-03'),
+(3, 1, '2025-03-04'),
+(4, 2, '2025-03-05'),
+(5, 3, '2025-03-06'),
+(5, 4, '2025-03-07'),
+(6, 1, '2025-03-08'),
+(7, 2, '2025-03-09'),
+(8, 3, '2025-03-10');
+ 
+SELECT s.Name AS StudentName, c.course_name AS CourseName
+FROM Students s
+INNER JOIN Enrolments e ON s.StudentID = e.student_id
+INNER JOIN Courses c ON e.course_id = c.course_id;
+ 
+ 
+SELECT c.course_name, COUNT(e.student_id) AS EnrolledStudents
+FROM Courses c
+LEFT JOIN Enrolments e ON c.course_id = e.course_id
+GROUP BY c.course_id, c.course_name;
+ 
+SELECT s.Name, COUNT(e.course_id) AS CourseCount
+FROM Students s
+INNER JOIN Enrolments e ON s.StudentID = e.student_id
+GROUP BY s.StudentID, s.Name
+HAVING COUNT(e.course_id) > 1;
+ 
+SELECT c.course_name
+FROM Courses c
+LEFT JOIN Enrolments e ON c.course_id = e.course_id
+WHERE e.enrolment_id IS NULL;
